@@ -7,11 +7,23 @@ public class Main {
     public static void main(String[] args) {
         String breed = "hound";
         BreedFetcher breedFetcher = new CachingBreedFetcher(new BreedFetcherForLocalTesting());
-        int result = getNumberOfSubBreeds(breed, breedFetcher);
+        int result;
+        try{
+            result = getNumberOfSubBreeds(breed, breedFetcher);
+        }
+        catch (BreedFetcher.BreedNotFoundException e) {
+            result = 0;
+        }
+
         System.out.println(breed + " has " + result + " sub breeds");
 
         breed = "cat";
-        result = getNumberOfSubBreeds(breed, breedFetcher);
+        try{
+            result = getNumberOfSubBreeds(breed, breedFetcher);
+        }
+        catch (BreedFetcher.BreedNotFoundException e) {
+            result = 0;
+        }
         System.out.println(breed + " has " + result + " sub breeds");
     }
 
@@ -24,15 +36,13 @@ public class Main {
      * returned by the fetcher
      */
     public static int getNumberOfSubBreeds(String breed, BreedFetcher breedFetcher) {
-        try {
-            List<String> subbreeds = breedFetcher.getSubBreeds(breed);
-            if (subbreeds.isEmpty()) {
-                return 0;
-            }
-            return subbreeds.size();
-        }
-        catch (BreedFetcher.BreedNotFoundException e) {
+
+        List<String> subbreeds = breedFetcher.getSubBreeds(breed);
+        if (subbreeds.isEmpty()) {
             return 0;
         }
+        return subbreeds.size();
+
+
     }
 }
