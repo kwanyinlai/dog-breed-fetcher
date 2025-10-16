@@ -44,19 +44,17 @@ public class CachingBreedFetcher implements BreedFetcher {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getString("status").equals("success")) {
+                cachedSubbreeds.put(breed, subbreedList);
+                callsMade++;
                 final JSONArray subbreeds = responseBody.getJSONArray("message");
                 for (var breedName : subbreeds) {
                     subbreedList.add(breedName.toString());
                 }
-                cachedSubbreeds.put(breed, subbreedList);
-                callsMade++;
+
             }
             else {
                 throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
-        }
-        catch (BreedFetcher.BreedNotFoundException event) {
-            System.out.println("There exists no subbreed for " + breed);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
