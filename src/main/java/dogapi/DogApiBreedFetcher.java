@@ -3,11 +3,7 @@ package dogapi;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,8 +23,6 @@ public class DogApiBreedFetcher implements BreedFetcher {
     @Override
     public List<String> getSubBreeds(String breed) {
         ArrayList<String> subbreedList = new ArrayList<>();
-        final OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
         final Request request = new Request.Builder()
                 .url("https://dog.ceo/api/breed/"+breed+"/list")
                 .build();
@@ -50,6 +44,6 @@ public class DogApiBreedFetcher implements BreedFetcher {
         catch (BreedFetcher.BreedNotFoundException event) {
             throw new BreedFetcher.BreedNotFoundException(event);
         }
-        return new ArrayList<>();
+        return subbreedList;
     }
 }
