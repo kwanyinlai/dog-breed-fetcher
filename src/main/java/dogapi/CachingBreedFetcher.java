@@ -28,7 +28,7 @@ public class CachingBreedFetcher implements BreedFetcher {
     }
 
     @Override
-    public List<String> getSubBreeds(String breed) {
+    public List<String> getSubBreeds(String breed) throws BreedNotFoundException {
 
         if (cachedSubbreeds.containsKey(breed)) {
             return cachedSubbreeds.get(breed);
@@ -50,13 +50,12 @@ public class CachingBreedFetcher implements BreedFetcher {
                 for (var breedName : subbreeds) {
                     subbreedList.add(breedName.toString());
                 }
-
             }
             else {
                 throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BreedFetcher.BreedNotFoundException("a");
         }
         return subbreedList;
     }

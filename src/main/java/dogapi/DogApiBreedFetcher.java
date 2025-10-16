@@ -43,9 +43,8 @@ public class DogApiBreedFetcher implements BreedFetcher {
             else {
                 throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return null;
         }
         return subbreedList;
     }
