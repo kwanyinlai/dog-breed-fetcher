@@ -4,7 +4,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -17,7 +16,6 @@ import java.util.*;
  */
 public class DogApiBreedFetcher implements BreedFetcher {
     private final OkHttpClient client = new OkHttpClient();
-
     /**
      * Fetch the list of sub breeds for the given breed from the dog.ceo API.
      * @param breed the breed to fetch sub breeds for
@@ -27,19 +25,18 @@ public class DogApiBreedFetcher implements BreedFetcher {
     @Override
     public List<String> getSubBreeds(String breed) {
         ArrayList<String> subbreedList = new ArrayList<>();
-        final OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
         final Request request = new Request.Builder()
-                .url("https://dog.ceo/api/breed/"+breed+"/list")
+                .url(String.format("%s/%s/list", "https://dog.ceo/api/breed", breed))
+                .addHeader("Content-Type", "application/json")
                 .build();
 
         try {
             final Response response = client.newCall(request).execute();
             final JSONObject responseBody = new JSONObject(response.body().string());
 
-            if (responseBody.getInt(STATUS_CODE) == SUCCESS_CODE) {
-                final JSONObject subbreeds = responseBody.getJSONObject("message");
-                for (Object breedName : subbreeds.keySet()) {
+            if (responseBody.getString("success").equals("success")) {
+                final JSONArray subbreeds = responseBody.getJSONArray("message");
+                for (var breedName : subbreeds) {
                     subbreedList.add(breedName.toString());
                 }
             }
@@ -48,8 +45,10 @@ public class DogApiBreedFetcher implements BreedFetcher {
             }
         }
         catch (BreedFetcher.BreedNotFoundException event) {
-            throw new BreedFetcher.BreedNotFoundException(event);
+            System.out.println("There exists no subbreed for " + breed);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return new ArrayList<>();
+        return subbreedList;
     }
 }
