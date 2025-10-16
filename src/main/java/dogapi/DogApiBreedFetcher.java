@@ -30,7 +30,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         final Request request = new Request.Builder()
-                .url("https://dog.ceo/api/breed/hound/list")
+                .url("https://dog.ceo/api/breed/"+breed+"/list")
                 .build();
 
         try {
@@ -44,12 +44,11 @@ public class DogApiBreedFetcher implements BreedFetcher {
                 }
             }
             else {
-                throw new RuntimeException("Grade could not be found for course: " + course
-                        + " and username: " + username);
+                throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
         }
-        catch (IOException | JSONException event) {
-            throw new RuntimeException(event);
+        catch (BreedFetcher.BreedNotFoundException event) {
+            throw new BreedFetcher.BreedNotFoundException(event);
         }
         return new ArrayList<>();
     }
