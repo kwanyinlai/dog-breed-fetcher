@@ -45,7 +45,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
             }
         }
         catch (BreedFetcher.BreedNotFoundException event) {
-            throw new BreedFetcher.BreedNotFoundException(event.toString());
+            System.out.println("There exists no subbreed for " + breed);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
