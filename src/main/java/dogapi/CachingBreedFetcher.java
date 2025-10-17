@@ -38,6 +38,7 @@ public class CachingBreedFetcher implements BreedFetcher {
                 .url(String.format("%s/%s/list", "https://dog.ceo/api/breed", breed))
                 .addHeader("Content-Type", "application/json")
                 .build();
+        callsMade++;
 
         try {
             final Response response = client.newCall(request).execute();
@@ -45,7 +46,7 @@ public class CachingBreedFetcher implements BreedFetcher {
 
             if (responseBody.getString("status").equals("success")) {
                 cachedSubbreeds.put(breed, subbreedList);
-                callsMade++;
+
                 final JSONArray subbreeds = responseBody.getJSONArray("message");
                 for (var breedName : subbreeds) {
                     subbreedList.add(breedName.toString());
@@ -55,7 +56,7 @@ public class CachingBreedFetcher implements BreedFetcher {
                 throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
         } catch (IOException e) {
-            throw new BreedFetcher.BreedNotFoundException("a");
+            throw new BreedFetcher.BreedNotFoundException(Subbreeds could not be found for " + breed);
         }
         return subbreedList;
     }
