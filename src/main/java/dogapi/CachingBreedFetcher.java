@@ -23,8 +23,9 @@ public class CachingBreedFetcher implements BreedFetcher {
     private int callsMade = 0;
     private final OkHttpClient client = new OkHttpClient();
     private HashMap<String, ArrayList<String>> cachedSubbreeds = new HashMap<>();
+    private final BreedFetcher breedFetcher;
     public CachingBreedFetcher(BreedFetcher fetcher) {
-
+        this.breedFetcher = fetcher;
     }
 
     @Override
@@ -33,32 +34,9 @@ public class CachingBreedFetcher implements BreedFetcher {
         if (cachedSubbreeds.containsKey(breed)) {
             return cachedSubbreeds.get(breed);
         }
-        ArrayList<String> subbreedList = new ArrayList<>();
-        final Request request = new Request.Builder()
-                .url(String.format("%s/%s/list", "https://dog.ceo/api/breed", breed))
-                .addHeader("Content-Type", "application/json")
-                .build();
         callsMade++;
 
-        try {
-            final Response response = client.newCall(request).execute();
-            final JSONObject responseBody = new JSONObject(response.body().string());
-
-            if (responseBody.getString("status").equals("success")) {
-                cachedSubbreeds.put(breed, subbreedList);
-
-                final JSONArray subbreeds = responseBody.getJSONArray("message");
-                for (var breedName : subbreeds) {
-                    subbreedList.add(breedName.toString());
-                }
-            }
-            else {
-                throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
-            }
-        } catch (IOException e) {
-            throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
-        }
-        return subbreedList;
+        return breedFetcher.getSubBreeds(breed);
     }
 
     public int getCallsMade() {

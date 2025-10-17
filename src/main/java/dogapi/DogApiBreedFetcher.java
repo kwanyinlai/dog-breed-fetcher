@@ -34,7 +34,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
             final Response response = client.newCall(request).execute();
             final JSONObject responseBody = new JSONObject(response.body().string());
 
-            if (responseBody.getString("success").equals("success")) {
+            if (responseBody.getString("status").equals("success")) {
                 final JSONArray subbreeds = responseBody.getJSONArray("message");
                 for (var breedName : subbreeds) {
                     subbreedList.add(breedName.toString());
