@@ -56,7 +56,7 @@ public class CachingBreedFetcher implements BreedFetcher {
                 throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
             }
         } catch (IOException e) {
-            throw new BreedFetcher.BreedNotFoundException(Subbreeds could not be found for " + breed);
+            throw new BreedFetcher.BreedNotFoundException("Subbreeds could not be found for " + breed);
         }
         return subbreedList;
     }
