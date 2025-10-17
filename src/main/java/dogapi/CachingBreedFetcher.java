@@ -22,7 +22,7 @@ import java.util.*;
 public class CachingBreedFetcher implements BreedFetcher {
     private int callsMade = 0;
     private final OkHttpClient client = new OkHttpClient();
-    private HashMap<String, ArrayList<String>> cachedSubbreeds = new HashMap<>();
+    private HashMap<String, List<String>> cachedSubbreeds = new HashMap<>();
     private final BreedFetcher breedFetcher;
     public CachingBreedFetcher(BreedFetcher fetcher) {
         this.breedFetcher = fetcher;
@@ -36,7 +36,9 @@ public class CachingBreedFetcher implements BreedFetcher {
         }
         callsMade++;
 
-        return breedFetcher.getSubBreeds(breed);
+        List<String> result = breedFetcher.getSubBreeds(breed);
+        cachedSubbreeds.put(breed, result);
+        return result;
     }
 
     public int getCallsMade() {
